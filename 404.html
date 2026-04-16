@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSP — matches PRD Security Architecture exactly -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 script-src 'self';
+                 style-src 'self' https://fonts.googleapis.com;
+                 font-src https://fonts.gstatic.com;
+                 connect-src https://api.github.com;
+                 img-src 'self' data:;">
+
+  <!-- SEO -->
+  <title>Page Not Found — Forge OTA Lab</title>
+  <meta name="description" content="The page you're looking for doesn't exist. Return to Forge OTA Lab.">
+  <meta name="theme-color" content="#7a4a28">
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- Dark Reader lock -->
+  <meta name="darkreader-lock">
+
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <!-- Google Fonts — eager load (no JS on 404 page, CSP-compliant) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap">
+
+  <!-- Site stylesheet -->
+  <link rel="stylesheet" href="style.css?v=1.0.0">
+</head>
+
+<body>
+  <!-- Skip-to-content — first focusable element (FR-10, Accessibility Manifest) -->
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
+  <!-- ============================================================
+       HEADER / NAVIGATION
+       ============================================================ -->
+  <header class="site-header">
+    <nav aria-label="Primary navigation">
+      <a href="/" class="site-logo" aria-label="Forge OTA Lab — Home">
+        <!-- Inline SVG icon — decorative beside text, so aria-hidden -->
+        <svg aria-hidden="true" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="24" height="24" rx="4" stroke="currentColor" stroke-width="2"/>
+          <path d="M8 14h12M14 8v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Forge OTA Lab
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="index.html#features">Features</a></li>
+        <li><a href="index.html#release">Release</a></li>
+        <li><a href="index.html#changelog">Changelog</a></li>
+        <li><a href="index.html#requirements">Requirements</a></li>
+        <li>
+          <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="Forge OTA Lab on GitHub (opens in new tab)">
+            GitHub
+            <!-- External link icon -->
+            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11 3L3 11M11 3H5M11 3v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ============================================================
+       MAIN CONTENT — 404 ERROR
+       ============================================================ -->
+  <main id="main-content">
+    <section class="section-404" aria-labelledby="error-heading">
+      <div class="error-content">
+        <p class="error-code" aria-hidden="true">404</p>
+        <hr class="error-rule">
+        <h1 id="error-heading" class="error-message">This partition wasn't found.</h1>
+        <a href="index.html" class="btn-primary error-back">
+          ← Back to Home
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer id="footer" aria-labelledby="footer-heading" class="site-footer">
+    <!-- Hidden heading for landmark navigation (screen readers) -->
+    <h2 id="footer-heading" class="visually-hidden">Site Information</h2>
+
+    <div class="footer-content">
+      <div class="footer-brand">
+        <p class="footer-product-name">Forge OTA Lab</p>
+        <p class="footer-description">Android OTA extraction workbench. On-device, local-first, open-source.</p>
+      </div>
+
+      <nav aria-label="Footer navigation" class="footer-nav">
+        <h3 class="footer-nav-title">Project</h3>
+        <ul role="list">
+          <li>
+            <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab"
+               target="_blank"
+               rel="noopener noreferrer">
+              GitHub Repository
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab/releases"
+               target="_blank"
+               rel="noopener noreferrer">
+              All Releases
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab/issues"
+               target="_blank"
+               rel="noopener noreferrer">
+              Report an Issue
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab/blob/main/LICENSE"
+               target="_blank"
+               rel="noopener noreferrer">
+              License (GPL-3.0)
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="footer-meta">
+        <p class="footer-copyright">
+          &copy; 2026 Forge OTA Lab contributors.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- No script.js — the 404 page is static -->
+</body>
+</html>

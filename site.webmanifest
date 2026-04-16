@@ -1,0 +1,17 @@
+{
+  "name": "Forge OTA Lab",
+  "short_name": "Forge",
+  "description": "Extract verified partition images from Android OTA packages. On-device, local-first, open-source.",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#7a4a28",
+  "background_color": "#1a1918",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

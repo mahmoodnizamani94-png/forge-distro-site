@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSP — matches PRD Security Architecture exactly -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 script-src 'self';
+                 style-src 'self' https://fonts.googleapis.com;
+                 font-src https://fonts.gstatic.com;
+                 connect-src https://api.github.com;
+                 img-src 'self' data:;">
+
+  <!-- Primary SEO (FR-7) -->
+  <title>Forge OTA Lab — Android OTA Extraction Workbench</title>
+  <meta name="description" content="Extract verified partition images from Android OTA packages. On-device, local-first, open-source. Download the APK.">
+  <meta name="theme-color" content="#7a4a28">
+  <link rel="canonical" href="https://Hamzasubhan400001.github.io/forge-distro-site/">
+
+  <!-- Open Graph (FR-7) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Forge OTA Lab — Android OTA Extraction Workbench">
+  <meta property="og:description" content="Extract verified partition images from Android OTA packages. On-device, local-first, open-source. Download the APK.">
+  <meta property="og:image" content="https://Hamzasubhan400001.github.io/forge-distro-site/og-image.png">
+  <meta property="og:url" content="https://Hamzasubhan400001.github.io/forge-distro-site/">
+
+  <!-- Twitter Card (FR-7) -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Forge OTA Lab — Android OTA Extraction Workbench">
+  <meta name="twitter:description" content="Extract verified partition images from Android OTA packages. On-device, local-first, open-source. Download the APK.">
+  <meta name="twitter:image" content="https://Hamzasubhan400001.github.io/forge-distro-site/og-image.png">
+
+  <!-- Forge repo config — JS reads these, not hardcoded (FR-2, Rule #9) -->
+  <meta name="forge:repo-owner" content="mahmoodnizamani94-png">
+  <meta name="forge:repo-name" content="forge-ota-lab">
+
+  <!-- Dark Reader lock -->
+  <meta name="darkreader-lock">
+
+  <!-- Structured Data — JSON-LD SoftwareApplication (FR-7) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Forge OTA Lab",
+    "operatingSystem": "Android",
+    "applicationCategory": "UtilitiesApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "downloadUrl": "https://github.com/mahmoodnizamani94-png/forge-ota-lab/releases/latest",
+    "description": "Extract verified partition images from Android OTA packages. On-device, local-first, open-source."
+  }
+  </script>
+
+  <!-- Favicon (placeholder paths — files come in P5) -->
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <!-- Google Fonts — CSP-compliant load (no inline onload handler)
+       Preload hints the browser to fetch early; script.js creates the
+       <link rel="stylesheet"> to activate fonts. noscript loads eagerly. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" id="gfonts-preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap">
+  </noscript>
+
+  <!-- Site stylesheet -->
+  <link rel="stylesheet" href="style.css?v=1.0.0">
+</head>
+
+<body>
+  <!-- Skip-to-content — first focusable element (FR-10, Accessibility Manifest) -->
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
+  <!-- Screen-reader live region for dynamic announcements (FR-4, FR-10) -->
+  <div aria-live="polite" aria-atomic="true" class="sr-announcements" id="sr-announcements"></div>
+
+  <!-- ============================================================
+       HEADER / NAVIGATION
+       ============================================================ -->
+  <header class="site-header">
+    <nav aria-label="Primary navigation">
+      <a href="/" class="site-logo" aria-label="Forge OTA Lab — Home">
+        <!-- Inline SVG icon — decorative beside text, so aria-hidden -->
+        <svg aria-hidden="true" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="24" height="24" rx="4" stroke="currentColor" stroke-width="2"/>
+          <path d="M8 14h12M14 8v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Forge OTA Lab
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#release">Release</a></li>
+        <li><a href="#changelog">Changelog</a></li>
+        <li><a href="#requirements">Requirements</a></li>
+        <li>
+          <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="Forge OTA Lab on GitHub (opens in new tab)">
+            GitHub
+            <!-- External link icon -->
+            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11 3L3 11M11 3H5M11 3v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ============================================================
+       MAIN CONTENT
+       ============================================================ -->
+  <main id="main-content">
+
+    <!-- ========================================================
+         SECTION 1: HERO
+         PRD Major Surface #1
+         ======================================================== -->
+    <section id="hero" aria-labelledby="hero-heading" class="section-hero">
+      <div class="hero-content">
+        <div class="hero-copy">
+          <!-- Version badge — static fallback "Latest Release" (Workflow E, State Matrix) -->
+          <span class="version-badge" id="version-badge" aria-label="Version">Latest Release</span>
+
+          <h1 id="hero-heading">Forge OTA Lab</h1>
+          <p class="hero-tagline">Extract verified partition images from Android OTA packages. On-device, local-first, open-source.</p>
+
+          <!-- Primary Download CTA (FR-3)
+               Static href → GitHub Releases latest page (Workflow E, Rule #3)
+               JS upgrades to direct APK URL in P3 -->
+          <div class="hero-actions">
+            <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab/releases/latest"
+               id="download-cta"
+               class="btn-primary download-cta"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Download Forge OTA Lab from GitHub Releases">
+              Download from GitHub
+            </a>
+          </div>
+        </div>
+
+        <!-- Terminal Window — decorative only (FR-8)
+             aria-hidden: screen readers skip; static final frame for no-JS -->
+        <div class="terminal-window" aria-hidden="true" role="img">
+          <div class="terminal-header">
+            <span class="terminal-title">forge-ota-lab</span>
+            <span class="terminal-dots">
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+            </span>
+          </div>
+          <pre class="terminal-body" id="terminal-body"><code>$ forge analyze pixel-9p-march-2026-ota.zip
+► FORMAT        payload.bin (A/B Full OTA)
+► DEVICE        Pixel 9 Pro — BP1A.250305.019
+► SECURITY      2026-03-05
+► TIER          SUPPORTED
+► PARTITIONS    34 detected (6 extractable)
+
+$ forge extract boot.img init_boot.img
+⋮ [████████████████████░░░] 88% — boot.img
+
+✓ boot.img         SHA-256 verified  [31.4 MB]
+✓ init_boot.img    SHA-256 verified  [ 8.1 MB]
+─
+Ready. 2 artifacts exported to /storage/OTA/</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 2: FEATURES
+         PRD Major Surface #2 — 3 feature cards (verbatim copy)
+         ======================================================== -->
+    <section id="features" aria-labelledby="features-heading" class="section-features">
+      <h2 id="features-heading">What Sets It Apart</h2>
+
+      <div class="features-grid">
+        <!-- Card 1 — Format-Aware -->
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">
+            <!-- Magnifying glass over chip -->
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="6" y="10" width="18" height="18" rx="3" stroke="currentColor" stroke-width="2"/>
+              <circle cx="15" cy="19" r="5" stroke="currentColor" stroke-width="2"/>
+              <path d="M19 23l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M10 15h2M10 19h2M10 23h2M20 15h2M20 23h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Knows what it can't do</h3>
+          <p class="feature-desc">Every package classified before extraction. Supported, Experimental, and Forensic tiers — never false confidence.</p>
+        </article>
+
+        <!-- Card 2 — On-Device -->
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">
+            <!-- Phone with lock -->
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="11" y="4" width="18" height="32" rx="3" stroke="currentColor" stroke-width="2"/>
+              <rect x="16" y="16" width="8" height="8" rx="2" stroke="currentColor" stroke-width="2"/>
+              <path d="M18 16v-2a2 2 0 114 0v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="20" cy="20" r="1" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Stays on your device</h3>
+          <p class="feature-desc">Your OTAs and outputs never leave local storage. No cloud sync, no telemetry, no account required.</p>
+        </article>
+
+        <!-- Card 3 — Verified Output -->
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">
+            <!-- Checkmark shield -->
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M20 4l12 5v10c0 8-5 14-12 17C13 33 8 27 8 19V9l12-5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M14 20l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">SHA-256 before victory</h3>
+          <p class="feature-desc">No success state before checksum passes. Every artifact labeled: direct, reconstructed, or partial.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 3: RELEASE CARD
+         PRD Major Surface #3 — latest version, date, size, SHA-256
+         Dynamic content populated by JS (P3); static fallback here
+         ======================================================== -->
+    <section id="release" aria-labelledby="release-heading" class="section-release" aria-live="polite">
+      <h2 id="release-heading">Latest Release</h2>
+
+      <!-- Skeleton loader — visible until JS populates, aria-hidden for SR -->
+      <div class="release-card" id="release-card">
+        <!-- Skeleton + status hidden by default; JS removes hidden when fetch begins.
+             This ensures no-JS users see ONLY the noscript block, not misleading "Loading..." -->
+        <div class="release-skeleton" id="release-skeleton" aria-hidden="true" hidden>
+          <div class="skeleton-bar skeleton-bar-title"></div>
+          <div class="skeleton-bar skeleton-bar-meta"></div>
+          <div class="skeleton-bar skeleton-bar-meta"></div>
+          <div class="skeleton-bar skeleton-bar-btn"></div>
+        </div>
+
+        <!-- Screen reader status text (sibling to skeleton per Accessibility Manifest) -->
+        <p class="release-status" role="status" id="release-status" hidden>Loading latest release…</p>
+
+        <!-- Static fallback content — meaningful with no JS (Workflow E) -->
+        <noscript>
+          <div class="release-fallback">
+            <p>Enable JavaScript to see version details, or visit GitHub Releases directly.</p>
+            <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab/releases/latest"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="btn-secondary">
+              View releases on GitHub →
+            </a>
+          </div>
+        </noscript>
+
+        <!-- JS-populated release data container (empty until P3) -->
+        <div class="release-data" id="release-data" hidden>
+          <dl class="release-meta">
+            <div class="release-meta-item">
+              <dt>Version</dt>
+              <dd id="release-version"></dd>
+            </div>
+            <div class="release-meta-item">
+              <dt>Released</dt>
+              <dd id="release-date"></dd>
+            </div>
+            <div class="release-meta-item">
+              <dt>Size</dt>
+              <dd id="release-size"></dd>
+            </div>
+          </dl>
+
+          <!-- SHA-256 block (FR-4) — hidden until hash found in release body -->
+          <div class="hash-block" id="hash-block" hidden>
+            <span class="hash-label">SHA-256</span>
+            <code class="hash-value" id="hash-value"></code>
+            <button type="button"
+                    class="btn-copy"
+                    id="hash-copy-btn"
+                    aria-label="Copy SHA-256 hash to clipboard">
+              Copy
+            </button>
+          </div>
+
+          <!-- Secondary download CTA within release card -->
+          <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab/releases/latest"
+             id="release-download-cta"
+             class="btn-primary"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="Download Forge OTA Lab from GitHub Releases">
+            Download from GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 4: CHANGELOG
+         PRD Major Surface #4 — last 3 versions, accordion
+         Dynamic content populated by JS (P3); static fallback here
+         ======================================================== -->
+    <section id="changelog" aria-labelledby="changelog-heading" class="section-changelog">
+      <h2 id="changelog-heading">What's New</h2>
+
+      <!-- Skeleton loader for changelog -->
+      <!-- Skeleton + status hidden by default; JS removes hidden when fetch begins -->
+      <div class="changelog-skeleton" id="changelog-skeleton" aria-hidden="true" hidden>
+        <div class="skeleton-bar skeleton-bar-full"></div>
+        <div class="skeleton-bar skeleton-bar-full"></div>
+        <div class="skeleton-bar skeleton-bar-full"></div>
+      </div>
+
+      <p class="changelog-status" role="status" id="changelog-status" hidden>Loading changelog…</p>
+
+      <!-- Static fallback for JS-disabled (Workflow E) -->
+      <noscript>
+        <div class="changelog-fallback">
+          <p>Enable JavaScript to see the changelog, or view the full release history on GitHub.</p>
+          <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab/releases"
+             target="_blank"
+             rel="noopener noreferrer"
+             class="btn-secondary">
+            View full release history on GitHub →
+          </a>
+        </div>
+      </noscript>
+
+      <!-- JS-populated accordion container (empty until P3) -->
+      <div class="changelog-entries" id="changelog-entries" hidden>
+        <!-- JS will populate accordion items here -->
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 5: REQUIREMENTS
+         PRD Major Surface #5 — Android version, arch, permissions
+         Fully static content
+         ======================================================== -->
+    <section id="requirements" aria-labelledby="requirements-heading" class="section-requirements">
+      <h2 id="requirements-heading">Device Requirements</h2>
+
+      <dl class="requirements-list">
+        <div class="requirement-item">
+          <dt>Android Version</dt>
+          <dd>Android 10 (API 29) or higher</dd>
+        </div>
+        <div class="requirement-item">
+          <dt>Architecture</dt>
+          <dd>arm64-v8a (64-bit ARM)</dd>
+        </div>
+        <div class="requirement-item">
+          <dt>Storage</dt>
+          <dd>Sufficient free space for OTA package + extracted images</dd>
+        </div>
+        <div class="requirement-item">
+          <dt>Permissions</dt>
+          <dd>Storage access for reading OTA files and saving extracted images</dd>
+        </div>
+        <div class="requirement-item">
+          <dt>Root</dt>
+          <dd>Not required — operates entirely in user-space</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- ========================================================
+         SECTION 6: TRUST STRIP
+         PRD Major Surface #6 — open source, checksum guide, security
+         ======================================================== -->
+    <section id="trust" aria-labelledby="trust-heading" class="section-trust">
+      <h2 id="trust-heading">Trust &amp; Verification</h2>
+
+      <div class="trust-grid">
+        <!-- Open Source -->
+        <div class="trust-item">
+          <svg aria-hidden="true" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 16l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h3>Open Source</h3>
+          <p>Full source code available on GitHub. Inspect every line, build from source, verify independently.</p>
+        </div>
+
+        <!-- Checksum Verification -->
+        <div class="trust-item">
+          <svg aria-hidden="true" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="8" width="24" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+            <path d="M8 14h6M8 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <h3>Verify Your Download</h3>
+          <p>Every release includes a SHA-256 checksum. After downloading, verify with:</p>
+          <pre><code>sha256sum forge-ota-lab.apk</code></pre>
+          <p>Compare the output with the hash shown on this page.</p>
+        </div>
+
+        <!-- Security Posture -->
+        <div class="trust-item">
+          <svg aria-hidden="true" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 3l11 4v8c0 7-4 12-11 15C9 27 5 22 5 15V7l11-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M11 16l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h3>Security Posture</h3>
+          <p>No network calls at runtime. No cloud dependencies. No tracking. No account required. Your firmware data stays on your device — always.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       SECTION 7: FOOTER
+       PRD Major Surface #7 — GitHub, license, community
+       ============================================================ -->
+  <footer id="footer" aria-labelledby="footer-heading" class="site-footer">
+    <!-- Hidden heading for landmark navigation (screen readers) -->
+    <h2 id="footer-heading" class="visually-hidden">Site Information</h2>
+
+    <div class="footer-content">
+      <div class="footer-brand">
+        <p class="footer-product-name">Forge OTA Lab</p>
+        <p class="footer-description">Android OTA extraction workbench. On-device, local-first, open-source.</p>
+      </div>
+
+      <nav aria-label="Footer navigation" class="footer-nav">
+        <h3 class="footer-nav-title">Project</h3>
+        <ul role="list">
+          <li>
+            <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab"
+               target="_blank"
+               rel="noopener noreferrer">
+              GitHub Repository
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab/releases"
+               target="_blank"
+               rel="noopener noreferrer">
+              All Releases
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab/issues"
+               target="_blank"
+               rel="noopener noreferrer">
+              Report an Issue
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab/blob/main/LICENSE"
+               target="_blank"
+               rel="noopener noreferrer">
+              License (GPL-3.0)
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="footer-meta">
+        <p class="footer-version" id="footer-version">
+          <!-- JS updates this with current version; static fallback below -->
+          <noscript>Version info requires JavaScript.</noscript>
+        </p>
+        <p class="footer-copyright">
+          &copy; 2026 Forge OTA Lab contributors.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Site JavaScript — module, deferred by default (P3/P4 — empty for now) -->
+  <script type="module" src="script.js?v=1.0.0"></script>
+</body>
+</html>
