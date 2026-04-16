@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://Hamzasubhan400001.github.io/forge-distro-site/sitemap.xml
+Sitemap: https://mahmoodnizamani-99.github.io/forge-distro-site/sitemap.xml
