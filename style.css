@@ -49,6 +49,7 @@
 
 /* ── RESET ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 body{font:400 .9375rem/1.6 var(--ff);color:var(--tx-1);background:var(--sf-page);overflow-x:hidden;min-height:100dvh}
 ::selection{background:var(--sel-bg);color:var(--sel-tx)}
