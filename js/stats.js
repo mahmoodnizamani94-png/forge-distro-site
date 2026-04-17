@@ -72,7 +72,7 @@ function shouldSkipAnimation() {
  * @returns {string}
  */
 function formatNumber(value) {
-  if (typeof value !== 'number' || value < 0) return '—';
+  if (typeof value !== 'number' || value < 0) return '-';
   if (value >= 1_000_000) {
     return `${(value / 1_000_000).toFixed(1)}M`;
   }
@@ -188,8 +188,8 @@ function showInstant() {
  * Static stats (Android, License) remain unchanged.
  */
 function showError() {
-  if (statDownloads) statDownloads.textContent = '—';
-  if (statVersion)   statVersion.textContent = '—';
+  if (statDownloads) statDownloads.textContent = '-';
+  if (statVersion)   statVersion.textContent = '-';
   // Static stats unchanged
 }
 
@@ -223,7 +223,7 @@ export function populateStats(latest, error) {
 
   // Version — plain text, no animation
   if (statVersion) {
-    statVersion.textContent = latest.tag_name || '—';
+    statVersion.textContent = latest.tag_name || '-';
   }
 
   // Static stats — already correct in HTML, but ensure they're set

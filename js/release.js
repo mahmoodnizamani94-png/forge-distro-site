@@ -14,13 +14,13 @@
 
 // ── Error messages by code ─────────────────────────────────────────────────────
 const ERROR_MESSAGES = {
-  TIMEOUT:      'Could not load release data — request timed out. ',
-  NETWORK:      'Could not load release data — network error. ',
-  RATE_LIMIT:   'Could not load release data — GitHub API may be rate-limited. ',
-  NO_RELEASES:  'No releases yet — the first release hasn\'t landed. ',
-  API_ERROR:    'Could not load release data — API error. ',
-  PARSE_ERROR:  'Could not load release data — unexpected response. ',
-  CONFIG_ERROR: 'Repository not configured — meta tags contain placeholder values. ',
+  TIMEOUT:      'Could not load release data. Request timed out. ',
+  NETWORK:      'Could not load release data. Network error. ',
+  RATE_LIMIT:   'Could not load release data. GitHub API may be rate-limited. ',
+  NO_RELEASES:  'No releases yet. The first release hasn\'t landed. ',
+  API_ERROR:    'Could not load release data. API error. ',
+  PARSE_ERROR:  'Could not load release data. Unexpected response. ',
+  CONFIG_ERROR: 'Repository not configured. Meta tags contain placeholder values. ',
 };
 
 // ── DOM element cache ──────────────────────────────────────────────────────────
@@ -67,7 +67,7 @@ function cacheDom() {
  * @returns {string} e.g. "14.2 MB"
  */
 function formatSize(bytes) {
-  if (!bytes || typeof bytes !== 'number') return '—';
+  if (!bytes || typeof bytes !== 'number') return '-';
   const mb = bytes / (1024 * 1024);
   return `${mb.toFixed(1)} MB`;
 }
@@ -78,7 +78,7 @@ function formatSize(bytes) {
  * @returns {string} e.g. "March 15, 2026"
  */
 function formatDate(isoDate) {
-  if (!isoDate) return '—';
+  if (!isoDate) return '-';
   try {
     return new Date(isoDate).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -86,7 +86,7 @@ function formatDate(isoDate) {
       day: 'numeric',
     });
   } catch {
-    return '—';
+    return '-';
   }
 }
 
@@ -96,7 +96,7 @@ function formatDate(isoDate) {
  * @returns {string}
  */
 function formatCount(count) {
-  if (typeof count !== 'number' || count < 0) return '—';
+  if (typeof count !== 'number' || count < 0) return '-';
   if (count >= 1_000_000) {
     return `${(count / 1_000_000).toFixed(1)}M`;
   }
@@ -144,7 +144,7 @@ export function showReleaseSkeleton() {
  * @param {object} latest - Enriched latest release from api.js
  */
 function populateSuccess(latest) {
-  const tag = latest.tag_name || '—';
+  const tag = latest.tag_name || '-';
   const date = formatDate(latest.published_at);
   const apk = latest._apk;
   const hash = latest._hash;
@@ -200,7 +200,7 @@ function populateSuccess(latest) {
   } else {
     // No APK asset — show info but disable download
     if (els.releaseSize) {
-      els.releaseSize.textContent = '—';
+      els.releaseSize.textContent = '-';
     }
     if (els.releaseDownloads) {
       els.releaseDownloads.textContent = formatCount(downloads);
@@ -259,7 +259,7 @@ async function copyHash(hash) {
 
   // Check clipboard API availability
   if (!navigator.clipboard || !navigator.clipboard.writeText) {
-    showCopyFeedback('Copy failed — select manually', 3000);
+    showCopyFeedback('Copy failed. Select manually', 3000);
     return;
   }
 
@@ -278,7 +278,7 @@ async function copyHash(hash) {
 
     console.log('[forge] SHA-256 hash copied to clipboard.');
   } catch {
-    showCopyFeedback('Copy failed — select manually', 3000);
+    showCopyFeedback('Copy failed. Select manually', 3000);
     console.warn('[forge] Clipboard write failed.');
   }
 }

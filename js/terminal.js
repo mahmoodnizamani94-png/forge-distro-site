@@ -20,13 +20,13 @@ const LOOP_PAUSE = 4000;          // ms before restart
 const TERMINAL_SCRIPT = [
   { type: 'command', text: '$ forge analyze pixel-9p-march-2026-ota.zip' },
   { type: 'scan', text: '► FORMAT        payload.bin (A/B Full OTA)' },
-  { type: 'scan', text: '► DEVICE        Pixel 9 Pro — BP1A.250305.019' },
+  { type: 'scan', text: '► DEVICE        Pixel 9 Pro - BP1A.250305.019' },
   { type: 'scan', text: '► SECURITY      2026-03-05' },
   { type: 'scan', text: '► TIER          SUPPORTED' },
   { type: 'scan', text: '► PARTITIONS    34 detected (6 extractable)' },
   { type: 'pause', duration: 200 },
   { type: 'command', text: '$ forge extract boot.img init_boot.img' },
-  { type: 'progress', text: '⋮ [{bar}] {pct}% — boot.img', duration: PROGRESS_DURATION },
+  { type: 'progress', text: '⋮ [{bar}] {pct}% - boot.img', duration: PROGRESS_DURATION },
   { type: 'pause', duration: 150 },
   { type: 'result', text: '✓ boot.img         SHA-256 verified  [31.4 MB]' },
   { type: 'result', text: '✓ init_boot.img    SHA-256 verified  [ 8.1 MB]' },
@@ -270,21 +270,21 @@ function getHelpText() {
   return [
     'Available commands:',
     '',
-    '  help       — Show this help message',
-    '  version    — Current app version and release date',
-    '  download   — Download the latest APK',
-    '  changelog  — Show latest changelog entry',
-    '  about      — About the developer',
-    '  clear      — Clear terminal output',
-    '  repo       — Open GitHub repository',
-    '  hash       — Show SHA-256 hash of latest release',
+    '  help       - Show this help message',
+    '  version    - Current app version and release date',
+    '  download   - Download the latest APK',
+    '  changelog  - Show latest changelog entry',
+    '  about      - About the developer',
+    '  clear      - Clear terminal output',
+    '  repo       - Open GitHub repository',
+    '  hash       - Show SHA-256 hash of latest release',
   ].join('\n');
 }
 
 /** Build version response */
 function getVersionText() {
   if (!apiData) {
-    return 'Data not available — visit GitHub Releases.';
+    return 'Data not available. Visit GitHub Releases.';
   }
   const version = apiData.tag_name || 'unknown';
   const date = apiData.published_at
@@ -298,7 +298,7 @@ function getVersionText() {
 /** Build changelog response */
 function getChangelogText() {
   if (!apiData) {
-    return 'Data not available — visit GitHub Releases.';
+    return 'Data not available. Visit GitHub Releases.';
   }
   const version = apiData.tag_name || 'unknown';
   const body = apiData.body
@@ -330,7 +330,7 @@ function getAboutText() {
 /** Build hash response */
 function getHashText() {
   if (!apiData) {
-    return 'Data not available — visit GitHub Releases.';
+    return 'Data not available. Visit GitHub Releases.';
   }
   if (!apiData._hash) {
     return 'No SHA-256 hash found in this release.';
@@ -344,7 +344,7 @@ const COMMANDS = {
   version() { return getVersionText(); },
   download() {
     if (!apiData) {
-      return 'Data not available — visit GitHub Releases.';
+      return 'Data not available. Visit GitHub Releases.';
     }
     // Trigger download CTA click
     if (downloadCta) {

@@ -178,9 +178,9 @@ function initGallery() {
 
   // Define screenshot sources
   const screenshots = [
-    { src: 'screenshots/screen-01.webp', alt: 'Forge OTA Lab — Analysis screen showing OTA package classification' },
-    { src: 'screenshots/screen-02.webp', alt: 'Forge OTA Lab — Extraction screen showing partition extraction progress' },
-    { src: 'screenshots/screen-03.webp', alt: 'Forge OTA Lab — Results screen showing extracted partition images' },
+    { src: 'screenshots/screen-01.webp', alt: 'Forge OTA Lab - Analysis screen showing OTA package classification' },
+    { src: 'screenshots/screen-02.webp', alt: 'Forge OTA Lab - Extraction screen showing partition extraction progress' },
+    { src: 'screenshots/screen-03.webp', alt: 'Forge OTA Lab - Results screen showing extracted partition images' },
   ];
 
   const observer = new IntersectionObserver((entries) => {

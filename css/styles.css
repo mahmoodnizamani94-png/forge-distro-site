@@ -817,6 +817,19 @@ body::before {
   outline-offset: 2px;
 }
 
+/* Download CTA in drawer — ensure high contrast on bright orange */
+.nav-drawer .download-cta {
+  color: #0f0d0c;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-shadow: none;
+  -webkit-text-fill-color: #0f0d0c;
+}
+
+.nav-drawer .download-cta::after {
+  display: none;
+}
+
 
 /* ╔══════════════════════════════════════════════════════════════════════════════╗
    ║  SECTION RHYTHM                                                            ║
@@ -975,6 +988,8 @@ body::before {
   box-shadow: 0 0 0 0 var(--glass-card-glow);
   position: relative;
   overflow: hidden;
+  /* Text must sit above the ::after shimmer overlay */
+  z-index: 0;
 }
 
 .btn-primary:hover {
@@ -1021,6 +1036,7 @@ body::before {
   border-radius: inherit;
   animation: shimmer-sweep 3s linear infinite;
   pointer-events: none;
+  z-index: -1;
 }
 
 /* ── Secondary button ──────────────────────────────────── */
