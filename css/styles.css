@@ -2421,6 +2421,50 @@ body::before {
 
 
 /* ╔══════════════════════════════════════════════════════════════════════════════╗
+   ║  MOBILE STICKY CTA BAR                                                     ║
+   ║  Fixed download button at bottom of viewport on mobile                     ║
+   ╚══════════════════════════════════════════════════════════════════════════════╝ */
+
+.mobile-cta-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  padding: var(--space-3) var(--content-padding);
+  padding-bottom: max(var(--space-3), env(safe-area-inset-bottom));
+  background: var(--mobile-cta-bar-bg);
+  backdrop-filter: blur(var(--mobile-cta-bar-blur));
+  -webkit-backdrop-filter: blur(var(--mobile-cta-bar-blur));
+  border-top: 1px solid var(--mobile-cta-bar-border);
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform var(--duration-normal) var(--ease-out-expo),
+              opacity var(--duration-normal) var(--ease-out-expo);
+  pointer-events: none;
+}
+
+.mobile-cta-bar.is-visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mobile-download-btn {
+  display: flex;
+  width: 100%;
+  text-align: center;
+}
+
+/* Hide on tablet+ where the hero CTA is always reachable */
+@media (min-width: 640px) {
+  .mobile-cta-bar {
+    display: none !important;
+  }
+}
+
+
+/* ╔══════════════════════════════════════════════════════════════════════════════╗
    ║  RESPONSIVE BREAKPOINTS — Mobile-first                                     ║
    ╚══════════════════════════════════════════════════════════════════════════════╝ */
 
@@ -2938,7 +2982,8 @@ body::before {
   .version-badge,
   .release-skeleton,
   .changelog-skeleton,
-  .terminal-cursor {
+  .terminal-cursor,
+  .mobile-cta-bar {
     display: none !important;
   }
 

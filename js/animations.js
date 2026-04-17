@@ -486,6 +486,53 @@ function initPageEntry() {
 
 
 // ══════════════════════════════════════════════════════════════════════════════
+//  MOBILE STICKY CTA BAR
+// ══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Show a fixed download bar at the bottom of the viewport on mobile
+ * once the hero download CTA scrolls out of view.
+ * Syncs href with whatever the API pipeline sets on the hero CTA.
+ */
+function initMobileCta() {
+  const bar = document.getElementById('mobile-cta-bar');
+  const heroCta = document.getElementById('download-cta');
+  const mobileCta = document.getElementById('mobile-download-cta');
+
+  if (!bar || !heroCta) return;
+
+  // Only relevant on mobile (CSS hides bar at ≥ 640px)
+  if (window.innerWidth >= 640) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        bar.classList.remove('is-visible');
+      } else {
+        bar.classList.add('is-visible');
+      }
+    });
+  }, { threshold: 0 });
+
+  observer.observe(heroCta);
+
+  // Sync mobile CTA href with hero CTA whenever it changes
+  if (mobileCta) {
+    const syncHref = () => {
+      const href = heroCta.getAttribute('href');
+      const download = heroCta.getAttribute('download');
+      if (href) mobileCta.setAttribute('href', href);
+      if (download) mobileCta.setAttribute('download', download);
+    };
+
+    // Observe attribute changes on the hero CTA
+    const attrObserver = new MutationObserver(syncHref);
+    attrObserver.observe(heroCta, { attributes: true, attributeFilter: ['href', 'download'] });
+  }
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
 //  MAIN EXPORT
 // ══════════════════════════════════════════════════════════════════════════════
 
@@ -522,6 +569,9 @@ export function initAnimations() {
 
   // Cursor glow on glass cards
   initCursorGlow();
+
+  // Mobile sticky CTA bar
+  initMobileCta();
 
   console.log('[forge] Animations module initialized');
 }

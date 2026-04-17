@@ -36,7 +36,7 @@ GitHub Pages rebuilds automatically within ~60 seconds.
 
 ## How to Update Release Data
 
-Push a new release to the **app repo** (`mahmoodnizamani-99/forge-ota-lab`). The site auto-fetches the latest release from the GitHub API on every page load (with 5-minute sessionStorage cache).
+Push a new release to the **app repo** (`mahmoodnizamani94-png/forge-ota-lab`). The site auto-fetches the latest release from the GitHub API on every page load (with 5-minute sessionStorage cache).
 
 **Release body format** — include the SHA-256 hash exactly like this:
 
