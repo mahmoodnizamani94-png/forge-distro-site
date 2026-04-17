@@ -33,8 +33,15 @@
   <meta name="twitter:image" content="https://mahmoodnizamani-99.github.io/forge-distro-site/og-image.png">
 
   <!-- Forge repo config — JS reads these, not hardcoded (FR-2, Rule #9) -->
-  <meta name="forge:repo-owner" content="mahmoodnizamani94-png">
+  <meta name="forge:repo-owner" content="mahmoodnizamani-99">
   <meta name="forge:repo-name" content="forge-ota-lab">
+
+  <!-- Forge developer identity — JS reads these for Built By section (FR-16) -->
+  <meta name="forge:dev-name" content="Mahmood Nizamani">
+  <meta name="forge:dev-tagline" content="Android systems engineer. Firmware tools, OTA pipelines, and open-source infrastructure.">
+  <meta name="forge:dev-url" content="https://github.com/mahmoodnizamani-99">
+  <meta name="forge:dev-github" content="https://github.com/mahmoodnizamani-99">
+  <meta name="forge:dev-linkedin" content="">
 
   <!-- Dark Reader lock -->
   <meta name="darkreader-lock">
@@ -52,29 +59,38 @@
       "price": "0",
       "priceCurrency": "USD"
     },
-    "downloadUrl": "https://github.com/mahmoodnizamani94-png/forge-ota-lab/releases/latest",
+    "downloadUrl": "https://github.com/mahmoodnizamani-99/forge-ota-lab/releases/latest",
     "description": "Extract verified partition images from Android OTA packages. On-device, local-first, open-source."
   }
   </script>
 
-  <!-- Favicon (placeholder paths — files come in P5) -->
+  <!-- Favicon -->
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
 
   <!-- Google Fonts — CSP-compliant load (no inline onload handler)
-       Preload hints the browser to fetch early; script.js creates the
+       Preconnect hints the browser to fetch early; script.js creates the
        <link rel="stylesheet"> to activate fonts. noscript loads eagerly. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" id="gfonts-preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap">
+  <link rel="preload" as="style" id="gfonts-preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
   <noscript>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
+  </noscript>
+
+  <!-- <noscript> strategy — show nav links, hide hamburger, hide stats strip -->
+  <noscript>
+    <style>
+      .nav-links { display: flex !important; }
+      .hamburger-btn { display: none !important; }
+      .section-stats { display: none !important; }
+    </style>
   </noscript>
 
   <!-- Site stylesheet -->
-  <link rel="stylesheet" href="style.css?v=1.0.1">
+  <link rel="stylesheet" href="css/styles.css?v=2.0.0">
 </head>
 
 <body>
@@ -82,7 +98,10 @@
   <a href="#main-content" class="skip-link">Skip to content</a>
 
   <!-- Screen-reader live region for dynamic announcements (FR-4, FR-10) -->
-  <div aria-live="polite" aria-atomic="true" class="sr-announcements" id="sr-announcements"></div>
+  <div aria-live="polite" aria-atomic="true" class="sr-announcements" id="aria-live"></div>
+
+  <!-- Particle canvas — behind all content (FR-13) -->
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
 
   <!-- ============================================================
        HEADER / NAVIGATION
@@ -97,13 +116,17 @@
         </svg>
         Forge OTA Lab
       </a>
+
+      <!-- Desktop nav links -->
       <ul class="nav-links" role="list">
         <li><a href="#features">Features</a></li>
         <li><a href="#release">Release</a></li>
+        <li><a href="#gallery">Gallery</a></li>
         <li><a href="#changelog">Changelog</a></li>
-        <li><a href="#requirements">Requirements</a></li>
+        <li><a href="#install">Install</a></li>
+        <li><a href="#built-by">Built By</a></li>
         <li>
-          <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab"
+          <a href="https://github.com/mahmoodnizamani-99/forge-ota-lab"
              target="_blank"
              rel="noopener noreferrer"
              aria-label="Forge OTA Lab on GitHub (opens in new tab)">
@@ -115,8 +138,52 @@
           </a>
         </li>
       </ul>
+
+      <!-- Hamburger menu button (mobile only, FR-14) -->
+      <button type="button"
+              class="hamburger-btn"
+              id="hamburger-btn"
+              aria-expanded="false"
+              aria-controls="nav-drawer"
+              aria-label="Open navigation menu">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
     </nav>
   </header>
+
+  <!-- Mobile nav drawer backdrop (FR-14) -->
+  <div class="nav-drawer-backdrop" id="nav-drawer-backdrop"></div>
+
+  <!-- Mobile nav drawer (FR-14) -->
+  <nav class="nav-drawer"
+       id="nav-drawer"
+       role="dialog"
+       aria-label="Navigation menu"
+       aria-modal="true">
+    <a href="#hero">Home</a>
+    <a href="#features">Features</a>
+    <a href="#release">Release</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#changelog">Changelog</a>
+    <a href="#install">Install</a>
+    <a href="#built-by">Built By</a>
+    <a href="https://github.com/mahmoodnizamani-99/forge-ota-lab"
+       target="_blank"
+       rel="noopener noreferrer">
+      GitHub
+      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11 3L3 11M11 3H5M11 3v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <a href="https://github.com/mahmoodnizamani-99/forge-ota-lab/releases/latest"
+       class="btn-primary download-cta"
+       target="_blank"
+       rel="noopener noreferrer">
+      Download from GitHub
+    </a>
+  </nav>
 
   <!-- ============================================================
        MAIN CONTENT
@@ -128,19 +195,22 @@
          PRD Major Surface #1
          ======================================================== -->
     <section id="hero" aria-labelledby="hero-heading" class="section-hero">
+      <!-- Background grid div (decorative) -->
+      <div class="hero-bg-grid" aria-hidden="true"></div>
+
       <div class="hero-content">
         <div class="hero-copy">
           <!-- Version badge — static fallback "Latest Release" (Workflow E, State Matrix) -->
-          <span class="version-badge" id="version-badge" aria-label="Version">Latest Release</span>
+          <span class="version-badge" id="version-badge">Latest Release</span>
 
-          <h1 id="hero-heading">Forge OTA Lab</h1>
+          <h1 id="hero-heading" class="hero-heading">Forge OTA Lab</h1>
           <p class="hero-tagline">Extract verified partition images from Android OTA packages. On-device, local-first, open-source.</p>
 
           <!-- Primary Download CTA (FR-3)
                Static href → GitHub Releases latest page (Workflow E, Rule #3)
-               JS upgrades to direct APK URL in P3 -->
+               JS upgrades to direct APK URL -->
           <div class="hero-actions">
-            <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab/releases/latest"
+            <a href="https://github.com/mahmoodnizamani-99/forge-ota-lab/releases/latest"
                id="download-cta"
                class="btn-primary download-cta"
                target="_blank"
@@ -149,11 +219,16 @@
               Download from GitHub
             </a>
           </div>
+
+          <!-- Download confirmation container — hidden until JS triggers -->
+          <div id="download-confirmation" class="download-confirmation" hidden>
+            <p id="download-confirmation-text"></p>
+          </div>
         </div>
 
-        <!-- Terminal Window — decorative only (FR-8)
-             aria-hidden: screen readers skip; static final frame for no-JS -->
-        <div class="terminal-window" aria-hidden="true" role="img">
+        <!-- Terminal Window (FR-8)
+             Decorative on mobile (aria-hidden), interactive on desktop via JS (FR-12) -->
+        <div class="terminal-window" id="terminal-window" role="img" aria-label="Terminal demonstration showing Forge OTA Lab analyzing an OTA package">
           <div class="terminal-header">
             <span class="terminal-title">forge-ota-lab</span>
             <span class="terminal-dots">
@@ -176,20 +251,73 @@ $ forge extract boot.img init_boot.img
 ✓ init_boot.img    SHA-256 verified  [ 8.1 MB]
 ─
 Ready. 2 artifacts exported to /storage/OTA/</code></pre>
+
+          <!-- Interactive terminal input (desktop only, FR-12) — hidden by CSS below 1024px -->
+          <div class="terminal-input-line" id="terminal-input-line">
+            <span class="terminal-input-prompt" aria-hidden="true">$</span>
+            <input type="text"
+                   class="terminal-input"
+                   id="terminal-input"
+                   aria-label="Terminal command input"
+                   placeholder="Type 'help' for commands…"
+                   autocomplete="off"
+                   spellcheck="false">
+          </div>
         </div>
       </div>
     </section>
 
     <!-- ========================================================
-         SECTION 2: FEATURES
-         PRD Major Surface #2 — 3 feature cards (verbatim copy)
+         SECTION 2: STATS STRIP
+         PRD Major Surface #2 — 4 animated counters
+         Hidden when JS disabled via <noscript> style
+         ======================================================== -->
+    <section id="stats" aria-labelledby="stats-heading" class="section-stats">
+      <h2 id="stats-heading" class="visually-hidden">Product Statistics</h2>
+
+      <div class="stats-grid">
+        <!-- Stat 1: Downloads -->
+        <div class="stat-item">
+          <span class="stat-value" id="stat-downloads">—</span>
+          <span class="stat-label">Downloads</span>
+        </div>
+
+        <div class="stat-divider" aria-hidden="true"></div>
+
+        <!-- Stat 2: Version -->
+        <div class="stat-item">
+          <span class="stat-value" id="stat-version">—</span>
+          <span class="stat-label">Latest Version</span>
+        </div>
+
+        <div class="stat-divider" aria-hidden="true"></div>
+
+        <!-- Stat 3: Android Target -->
+        <div class="stat-item">
+          <span class="stat-value" id="stat-android">10+</span>
+          <span class="stat-label">Android Target</span>
+        </div>
+
+        <div class="stat-divider" aria-hidden="true"></div>
+
+        <!-- Stat 4: License -->
+        <div class="stat-item">
+          <span class="stat-value" id="stat-license">GPL-3.0</span>
+          <span class="stat-label">Open Source</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 3: FEATURES
+         PRD Major Surface #3 — 3 HUD-framed glassmorphism cards
          ======================================================== -->
     <section id="features" aria-labelledby="features-heading" class="section-features">
       <h2 id="features-heading">What Sets It Apart</h2>
 
       <div class="features-grid">
         <!-- Card 1 — Format-Aware -->
-        <article class="feature-card">
+        <article class="feature-card glass-card hud-frame">
           <div class="feature-icon" aria-hidden="true">
             <!-- Magnifying glass over chip -->
             <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -204,7 +332,7 @@ Ready. 2 artifacts exported to /storage/OTA/</code></pre>
         </article>
 
         <!-- Card 2 — On-Device -->
-        <article class="feature-card">
+        <article class="feature-card glass-card hud-frame">
           <div class="feature-icon" aria-hidden="true">
             <!-- Phone with lock -->
             <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -219,7 +347,7 @@ Ready. 2 artifacts exported to /storage/OTA/</code></pre>
         </article>
 
         <!-- Card 3 — Verified Output -->
-        <article class="feature-card">
+        <article class="feature-card glass-card hud-frame">
           <div class="feature-icon" aria-hidden="true">
             <!-- Checkmark shield -->
             <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -234,16 +362,16 @@ Ready. 2 artifacts exported to /storage/OTA/</code></pre>
     </section>
 
     <!-- ========================================================
-         SECTION 3: RELEASE CARD
-         PRD Major Surface #3 — latest version, date, size, SHA-256
-         Dynamic content populated by JS (P3); static fallback here
+         SECTION 4: RELEASE CARD
+         PRD Major Surface #4 — latest version, date, size, SHA-256
+         Dynamic content populated by JS; static fallback here
          ======================================================== -->
-    <section id="release" aria-labelledby="release-heading" class="section-release" aria-live="polite">
+    <section id="release" aria-labelledby="release-heading" class="section-release">
       <h2 id="release-heading">Latest Release</h2>
 
-      <!-- Skeleton loader — visible until JS populates, aria-hidden for SR -->
-      <div class="release-card" id="release-card">
-        <!-- Skeleton + status hidden by default; JS removes hidden when fetch begins.
+      <div class="release-card hud-frame hud-frame--pulse" id="release-card">
+        <!-- Skeleton loader — visible until JS populates, aria-hidden for SR
+             Skeleton + status hidden by default; JS removes hidden when fetch begins.
              This ensures no-JS users see ONLY the noscript block, not misleading "Loading..." -->
         <div class="release-skeleton" id="release-skeleton" aria-hidden="true" hidden>
           <div class="skeleton-bar skeleton-bar-title"></div>
@@ -259,7 +387,7 @@ Ready. 2 artifacts exported to /storage/OTA/</code></pre>
         <noscript>
           <div class="release-fallback">
             <p>Enable JavaScript to see version details, or visit GitHub Releases directly.</p>
-            <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab/releases/latest"
+            <a href="https://github.com/mahmoodnizamani-99/forge-ota-lab/releases/latest"
                target="_blank"
                rel="noopener noreferrer"
                class="btn-secondary">
@@ -268,7 +396,7 @@ Ready. 2 artifacts exported to /storage/OTA/</code></pre>
           </div>
         </noscript>
 
-        <!-- JS-populated release data container (empty until P3) -->
+        <!-- JS-populated release data container (empty until JS fills) -->
         <div class="release-data" id="release-data" hidden>
           <dl class="release-meta">
             <div class="release-meta-item">
@@ -282,6 +410,10 @@ Ready. 2 artifacts exported to /storage/OTA/</code></pre>
             <div class="release-meta-item">
               <dt>Size</dt>
               <dd id="release-size"></dd>
+            </div>
+            <div class="release-meta-item">
+              <dt>Downloads</dt>
+              <dd id="release-downloads"></dd>
             </div>
           </dl>
 
@@ -298,22 +430,76 @@ Ready. 2 artifacts exported to /storage/OTA/</code></pre>
           </div>
 
           <!-- Secondary download CTA within release card -->
-          <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab/releases/latest"
+          <a href="https://github.com/mahmoodnizamani-99/forge-ota-lab/releases/latest"
              id="release-download-cta"
-             class="btn-primary"
+             class="btn-primary download-cta"
              target="_blank"
              rel="noopener noreferrer"
              aria-label="Download Forge OTA Lab from GitHub Releases">
             Download from GitHub
           </a>
         </div>
+
+        <!-- Error state container — JS populates on API failure -->
+        <div id="release-error" class="terminal-message terminal-message-warning" role="alert" hidden>
+          <span class="terminal-message-icon" aria-hidden="true">⚠</span>
+          <span class="terminal-message-text" id="release-error-text"></span>
+        </div>
       </div>
     </section>
 
     <!-- ========================================================
-         SECTION 4: CHANGELOG
-         PRD Major Surface #4 — last 3 versions, accordion
-         Dynamic content populated by JS (P3); static fallback here
+         SECTION 5: GALLERY
+         PRD Major Surface #5 — 3-panel screenshot grid with HUD overlays
+         ======================================================== -->
+    <section id="gallery" aria-labelledby="gallery-heading" class="section-gallery">
+      <h2 id="gallery-heading">App Gallery</h2>
+
+      <div class="gallery-grid">
+        <!-- Panel 1 -->
+        <div class="gallery-panel hud-frame">
+          <div class="gallery-hud-overlay">
+            <span class="gallery-hud-tag">v1.0.0</span>
+            <span class="gallery-hud-label">Analysis View</span>
+          </div>
+          <div class="gallery-placeholder">
+            <span class="gallery-placeholder-label">Screenshot Pending</span>
+          </div>
+          <!-- JS will swap placeholder with:
+               <img src="screenshots/screen-01.webp"
+                    alt="Forge OTA Lab — Analysis screen showing OTA package classification"
+                    loading="lazy"
+                    width="1080" height="2340"> -->
+        </div>
+
+        <!-- Panel 2 -->
+        <div class="gallery-panel hud-frame">
+          <div class="gallery-hud-overlay">
+            <span class="gallery-hud-tag">v1.0.0</span>
+            <span class="gallery-hud-label">Extraction View</span>
+          </div>
+          <div class="gallery-placeholder">
+            <span class="gallery-placeholder-label">Screenshot Pending</span>
+          </div>
+        </div>
+
+        <!-- Panel 3 -->
+        <div class="gallery-panel hud-frame">
+          <div class="gallery-hud-overlay">
+            <span class="gallery-hud-tag">v1.0.0</span>
+            <span class="gallery-hud-label">Results View</span>
+          </div>
+          <div class="gallery-placeholder">
+            <span class="gallery-placeholder-label">Screenshot Pending</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 6: CHANGELOG
+         PRD Major Surface #6 — last 3 versions, accordion
+         Dynamic content populated by JS; static fallback here
          ======================================================== -->
     <section id="changelog" aria-labelledby="changelog-heading" class="section-changelog">
       <h2 id="changelog-heading">What's New</h2>
@@ -332,7 +518,7 @@ Ready. 2 artifacts exported to /storage/OTA/</code></pre>
       <noscript>
         <div class="changelog-fallback">
           <p>Enable JavaScript to see the changelog, or view the full release history on GitHub.</p>
-          <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab/releases"
+          <a href="https://github.com/mahmoodnizamani-99/forge-ota-lab/releases"
              target="_blank"
              rel="noopener noreferrer"
              class="btn-secondary">
@@ -341,16 +527,115 @@ Ready. 2 artifacts exported to /storage/OTA/</code></pre>
         </div>
       </noscript>
 
-      <!-- JS-populated accordion container (empty until P3) -->
+      <!-- JS-populated accordion container (empty until JS fills) -->
       <div class="changelog-entries" id="changelog-entries" hidden>
         <!-- JS will populate accordion items here -->
+      </div>
+
+      <!-- Error fallback with GitHub link — JS shows on API failure -->
+      <div id="changelog-error" class="terminal-message terminal-message-warning" role="alert" hidden>
+        <span class="terminal-message-icon" aria-hidden="true">⚠</span>
+        <span class="terminal-message-text">
+          Changelog unavailable.
+          <a href="https://github.com/mahmoodnizamani-99/forge-ota-lab/releases"
+             target="_blank"
+             rel="noopener noreferrer"
+             class="terminal-message-link">
+            View full release history on GitHub →
+          </a>
+        </span>
       </div>
     </section>
 
     <!-- ========================================================
-         SECTION 5: REQUIREMENTS
-         PRD Major Surface #5 — Android version, arch, permissions
+         SECTION 7: ARCHITECTURE TERMINAL
+         PRD Major Surface #7 — static decorated terminal (FR-19)
+         Zero JS dependency
+         ======================================================== -->
+    <section id="architecture" aria-labelledby="architecture-heading" class="section-architecture">
+      <h2 id="architecture-heading">Under the Hood</h2>
+
+      <div class="arch-terminal hud-frame" role="img" aria-label="Architecture diagram showing Forge OTA Lab's processing pipeline: input layer (payload parser, package extractor), classification engine (supported, experimental, forensic tiers), output layer (SHA-256 verifier), and security model (no network, no cloud, GPL-3.0)">
+        <div class="arch-terminal-header">
+          <span class="arch-terminal-title">forge-ota-lab — architecture</span>
+          <span class="terminal-dots">
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+          </span>
+        </div>
+        <pre class="arch-terminal-body"><code>
+<span class="arch-section-label">  INPUT LAYER</span>
+  ─────────────────────────────────────────────────────
+  payload.bin → PayloadParser
+  .zip / .tar.gz → PackageExtractor → payload.bin
+
+<span class="arch-section-label">  CLASSIFICATION ENGINE</span>
+  ─────────────────────────────────────────────────────
+  PayloadParser → PartitionManifest
+  PartitionManifest → TierClassifier
+    <span class="arch-tier-supported">SUPPORTED</span>    → direct extraction
+    <span class="arch-tier-experimental">EXPERIMENTAL</span> → extraction with integrity warnings
+    <span class="arch-tier-forensic">FORENSIC</span>     → hash capture only, no extraction
+
+<span class="arch-section-label">  OUTPUT LAYER</span>
+  ─────────────────────────────────────────────────────
+  ExtractedImage → SHA256Verifier → /storage/OTA/
+  All output: labeled [direct | reconstructed | partial]
+
+<span class="arch-section-label">  SECURITY MODEL</span>
+  No network. No cloud. Termux-compatible. GPL-3.0 licensed.
+</code></pre>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 8: INSTALL GUIDE
+         PRD Major Surface #8 — step-by-step sideloading (FR-15)
          Fully static content
+         ======================================================== -->
+    <section id="install" aria-labelledby="install-heading" class="section-install">
+      <h2 id="install-heading">Install Guide</h2>
+
+      <ol class="install-steps" role="list">
+        <!-- Step 1 -->
+        <li class="install-step">
+          <span class="install-step-number" aria-hidden="true">1</span>
+          <h3 class="install-step-title">Download the APK</h3>
+          <p class="install-step-desc">Tap the download button above or visit
+            <a href="https://github.com/mahmoodnizamani-99/forge-ota-lab/releases/latest"
+               target="_blank"
+               rel="noopener noreferrer">GitHub Releases</a>.
+          </p>
+        </li>
+
+        <!-- Step 2 -->
+        <li class="install-step">
+          <span class="install-step-number" aria-hidden="true">2</span>
+          <h3 class="install-step-title">Allow installation</h3>
+          <p class="install-step-desc">Open <strong>Settings → Apps → Special app access → Install unknown apps</strong> and enable it for your browser.</p>
+        </li>
+
+        <!-- Step 3 -->
+        <li class="install-step">
+          <span class="install-step-number" aria-hidden="true">3</span>
+          <h3 class="install-step-title">Install</h3>
+          <p class="install-step-desc">Open the downloaded APK file and tap <strong>"Install"</strong>.</p>
+        </li>
+
+        <!-- Step 4 -->
+        <li class="install-step">
+          <span class="install-step-number" aria-hidden="true">4</span>
+          <h3 class="install-step-title">Verify (optional)</h3>
+          <p class="install-step-desc">Compare the SHA-256 hash shown above with the output of:</p>
+          <pre><code>sha256sum /path/to/forge-ota-lab.apk</code></pre>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ========================================================
+         SECTION 9: REQUIREMENTS + TRUST STRIP
+         PRD Major Surface #9
          ======================================================== -->
     <section id="requirements" aria-labelledby="requirements-heading" class="section-requirements">
       <h2 id="requirements-heading">Device Requirements</h2>
@@ -379,55 +664,101 @@ Ready. 2 artifacts exported to /storage/OTA/</code></pre>
       </dl>
     </section>
 
-    <!-- ========================================================
-         SECTION 6: TRUST STRIP
-         PRD Major Surface #6 — open source, checksum guide, security
-         ======================================================== -->
     <section id="trust" aria-labelledby="trust-heading" class="section-trust">
       <h2 id="trust-heading">Trust &amp; Verification</h2>
 
       <div class="trust-grid">
         <!-- Open Source -->
-        <div class="trust-item">
+        <div class="trust-item hud-frame">
           <svg aria-hidden="true" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2"/>
             <path d="M12 16l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <h3>Open Source</h3>
+          <h3>✓ Open Source</h3>
           <p>Full source code available on GitHub. Inspect every line, build from source, verify independently.</p>
         </div>
 
         <!-- Checksum Verification -->
-        <div class="trust-item">
+        <div class="trust-item hud-frame">
           <svg aria-hidden="true" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="4" y="8" width="24" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
             <path d="M8 14h6M8 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
-          <h3>Verify Your Download</h3>
+          <h3>✓ Verify Your Download</h3>
           <p>Every release includes a SHA-256 checksum. After downloading, verify with:</p>
           <pre><code>sha256sum forge-ota-lab.apk</code></pre>
           <p>Compare the output with the hash shown on this page.</p>
+          <!-- Expandable verification instructions (S-1) -->
+          <details>
+            <summary>Verification commands for all platforms</summary>
+            <pre><code># Linux / Termux
+sha256sum forge-ota-lab.apk
+
+# macOS
+shasum -a 256 forge-ota-lab.apk
+
+# Windows (PowerShell)
+Get-FileHash forge-ota-lab.apk -Algorithm SHA256</code></pre>
+          </details>
         </div>
 
         <!-- Security Posture -->
-        <div class="trust-item">
+        <div class="trust-item hud-frame">
           <svg aria-hidden="true" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 3l11 4v8c0 7-4 12-11 15C9 27 5 22 5 15V7l11-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
             <path d="M11 16l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <h3>Security Posture</h3>
+          <h3>✓ Security Posture</h3>
           <p>No network calls at runtime. No cloud dependencies. No tracking. No account required. Your firmware data stays on your device — always.</p>
         </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 10: BUILT BY
+         PRD Major Surface #10 — developer identity, tech stack (FR-16)
+         ======================================================== -->
+    <section id="built-by" aria-labelledby="built-by-heading" class="section-built-by">
+      <h2 id="built-by-heading">Built By</h2>
+
+      <div class="built-by-card glass-card hud-frame">
+        <!-- Developer identity — populated by JS from meta tags -->
+        <div id="built-by-identity">
+          <p class="built-by-name" id="built-by-name"></p>
+          <p class="built-by-tagline" id="built-by-tagline"></p>
+        </div>
+
+        <p class="built-by-intro">This site was built with:</p>
+
+        <!-- Tech stack badges (static HTML) -->
+        <div class="built-by-stack">
+          <span class="tech-badge">Vanilla HTML/CSS/JS</span>
+          <span class="tech-badge">OKLCH Color Science</span>
+          <span class="tech-badge">WCAG 2.2 AA</span>
+          <span class="tech-badge">GitHub API</span>
+          <span class="tech-badge">Interactive Terminal</span>
+          <span class="tech-badge">Canvas Particles</span>
+          <span class="tech-badge">Glassmorphism</span>
+        </div>
+
+        <!-- Social links container — populated by JS from meta tags -->
+        <div class="built-by-links" id="built-by-links">
+          <!-- JS will populate: Portfolio, GitHub, LinkedIn links -->
+        </div>
+
+        <noscript>
+          <p class="built-by-intro" style="margin-top: var(--space-4);">Enable JavaScript to see developer links, or visit the repository on GitHub.</p>
+        </noscript>
       </div>
     </section>
 
   </main>
 
   <!-- ============================================================
-       SECTION 7: FOOTER
-       PRD Major Surface #7 — GitHub, license, community
+       SECTION 11: FOOTER
+       PRD Major Surface #11 — GitHub, license, Star CTA, version
        ============================================================ -->
-  <footer id="footer" aria-labelledby="footer-heading" class="site-footer">
+  <footer id="footer" aria-labelledby="footer-heading" class="site-footer" aria-label="Site footer">
     <!-- Hidden heading for landmark navigation (screen readers) -->
     <h2 id="footer-heading" class="visually-hidden">Site Information</h2>
 
@@ -441,28 +772,21 @@ Ready. 2 artifacts exported to /storage/OTA/</code></pre>
         <h3 class="footer-nav-title">Project</h3>
         <ul role="list">
           <li>
-            <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab"
+            <a href="https://github.com/mahmoodnizamani-99/forge-ota-lab"
                target="_blank"
                rel="noopener noreferrer">
               GitHub Repository
             </a>
           </li>
           <li>
-            <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab/releases"
+            <a href="https://github.com/mahmoodnizamani-99/forge-ota-lab/releases"
                target="_blank"
                rel="noopener noreferrer">
               All Releases
             </a>
           </li>
           <li>
-            <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab/issues"
-               target="_blank"
-               rel="noopener noreferrer">
-              Report an Issue
-            </a>
-          </li>
-          <li>
-            <a href="https://github.com/mahmoodnizamani94-png/forge-ota-lab/blob/main/LICENSE"
+            <a href="https://github.com/mahmoodnizamani-99/forge-ota-lab/blob/main/LICENSE"
                target="_blank"
                rel="noopener noreferrer">
               License (GPL-3.0)
@@ -472,6 +796,15 @@ Ready. 2 artifacts exported to /storage/OTA/</code></pre>
       </nav>
 
       <div class="footer-meta">
+        <!-- Star on GitHub CTA (S-4) -->
+        <a href="https://github.com/mahmoodnizamani-99/forge-ota-lab"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="star-github-cta"
+           aria-label="Star Forge OTA Lab on GitHub (opens in new tab)">
+          ★ Star on GitHub
+        </a>
+
         <p class="footer-version" id="footer-version">
           <!-- JS updates this with current version; static fallback below -->
           <noscript>Version info requires JavaScript.</noscript>
@@ -483,7 +816,16 @@ Ready. 2 artifacts exported to /storage/OTA/</code></pre>
     </div>
   </footer>
 
-  <!-- Site JavaScript — module, deferred by default (P3/P4 — empty for now) -->
-  <script type="module" src="script.js?v=1.0.1"></script>
+  <!-- Scroll-to-top button (S-6) — hidden by default, JS shows after 150vh  -->
+  <button type="button"
+          id="scroll-to-top"
+          class="btn-secondary scroll-to-top"
+          aria-label="Scroll to top"
+          hidden>
+    ↑
+  </button>
+
+  <!-- Site JavaScript — module, deferred by default -->
+  <script type="module" src="js/script.js?v=2.0.0"></script>
 </body>
 </html>
