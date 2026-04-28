@@ -1275,6 +1275,9 @@ body::before {
   box-shadow:
     0 4px 16px var(--color-shadow-md),
     0 0 48px var(--color-terminal-glow);
+  /* Containment: internal DOM mutations (typewriter animation) never
+     trigger layout recalculation outside this element boundary. */
+  contain: layout style;
 }
 
 /* Glow indicator when interactive input is focused */
@@ -1327,8 +1330,9 @@ body::before {
   white-space: pre-wrap;
   word-break: break-all;
   tab-size: 2;
-  min-height: 240px;
-  max-height: 400px;
+  /* Fixed height prevents content-driven height changes from propagating
+     as layout shifts to the entire document below the hero section. */
+  height: 320px;
 }
 
 .terminal-body code {

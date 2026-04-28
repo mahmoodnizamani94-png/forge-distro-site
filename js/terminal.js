@@ -43,9 +43,11 @@ let downloadCta = null;
 
 let isAnimating = false;
 let isInteractive = false;
+let isTerminalVisible = true;
 let animationAbortController = null;
 let apiData = null;
 let apiError = false;
+let visibilityObserver = null;
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -243,6 +245,40 @@ function stopAnimation() {
     animationAbortController = null;
   }
   isAnimating = false;
+}
+
+/** Pause the animation when the terminal scrolls out of view.
+ *  Resume when it scrolls back into view. This eliminates
+ *  the DOM mutations (appendChild/removeChild/textContent)
+ *  that cause layout recalculation and visible page shake. */
+function initVisibilityObserver() {
+  if (!('IntersectionObserver' in window) || !terminalWindow) return;
+
+  // Generous rootMargin: keep animating a bit beyond the viewport edge
+  // so there's no visible "pop" when scrolling back to the terminal.
+  visibilityObserver = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      isTerminalVisible = entry.isIntersecting;
+
+      if (isInteractive) continue; // Interactive mode manages its own lifecycle
+
+      if (isTerminalVisible && !isAnimating) {
+        startAnimation();
+      } else if (!isTerminalVisible && isAnimating) {
+        stopAnimation();
+        // Render static final state so the terminal looks correct
+        // if the user prints the page or inspects off-screen DOM.
+        renderStaticState();
+      }
+    }
+  }, {
+    // Extend detection 200px beyond viewport — avoids visible
+    // animation restart as the terminal enters the viewport.
+    rootMargin: '200px 0px',
+    threshold: 0,
+  });
+
+  visibilityObserver.observe(terminalWindow);
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -552,8 +588,14 @@ export function initTerminal() {
     if (!isInteractive) updateTerminalAria();
   });
 
-  // Start animation
-  startAnimation();
+  // Start animation (visibility observer will control pause/resume)
+  initVisibilityObserver();
+
+  // Kick off initial animation only if terminal is actually visible.
+  // The observer will start it if the terminal enters the viewport later.
+  if (isTerminalVisible) {
+    startAnimation();
+  }
 
   console.log('[forge] Terminal: initialized');
 }
