@@ -271,20 +271,11 @@ class ParticleSystem {
 
 
   // ── SCROLL ───────────────────────────────────────────────────────────────
+  // Scroll pausing removed: canvas is position:fixed and always visible.
+  // No performance benefit to stopping the animation based on scrollY.
 
   _handleScroll() {
-    const scrollThreshold = window.innerHeight * SCROLL_HIDE_THRESHOLD;
-    if (window.scrollY > scrollThreshold) {
-      if (!this.isPaused) {
-        this.isPaused = true;
-      }
-    } else {
-      if (this.isPaused && !document.hidden) {
-        this.isPaused = false;
-        this.lastFrameTime = performance.now();
-        this._loop(this.lastFrameTime);
-      }
-    }
+    // No-op — kept for clean listener removal in destroy()
   }
 
 
