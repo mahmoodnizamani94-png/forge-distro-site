@@ -143,9 +143,9 @@ function initBackToTop() {
 
     requestAnimationFrame(() => {
       if (window.scrollY > threshold) {
-        btn.removeAttribute('hidden');
+        btn.classList.add('is-visible');
       } else {
-        btn.setAttribute('hidden', '');
+        btn.classList.remove('is-visible');
       }
       ticking = false;
     });
@@ -399,6 +399,9 @@ function initDownloadConfirmation() {
 
   ctas.forEach(cta => {
     cta.addEventListener('click', () => {
+      // Add loading state to button
+      cta.classList.add('is-loading');
+
       // Show processing state
       container.removeAttribute('hidden');
       container.classList.remove('is-success');
@@ -416,6 +419,7 @@ function initDownloadConfirmation() {
         clearInterval(dotInterval);
         textEl.textContent = 'Download started ✓';
         container.classList.add('is-success');
+        cta.classList.remove('is-loading');
 
         // Hide after 3 seconds
         setTimeout(() => {
@@ -481,6 +485,74 @@ function initPageEntry() {
 
     const featureCards = document.querySelectorAll('.feature-card');
     featureCards.forEach(card => card.classList.add('is-visible'));
+
+    const versionBadge = document.querySelector('.version-badge');
+    if (versionBadge) versionBadge.classList.add('is-visible');
+
+    // Force-show all reveal sections
+    const revealSections = document.querySelectorAll('.section-reveal');
+    revealSections.forEach(s => s.classList.add('is-visible'));
+  }
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  SECTION SCROLL REVEAL
+// ══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Adds `.section-reveal` class to below-fold sections and reveals them
+ * on scroll with IntersectionObserver. Hero and stats are excluded.
+ */
+function initScrollReveal() {
+  const excludedSections = ['hero', 'stats'];
+  const sections = document.querySelectorAll('section[id]');
+  if (!sections.length) return;
+
+  // Tag eligible sections with the CSS hook
+  const revealTargets = [];
+  sections.forEach(section => {
+    if (!excludedSections.includes(section.id)) {
+      section.classList.add('section-reveal');
+      revealTargets.push(section);
+    }
+  });
+
+  if (!revealTargets.length) return;
+
+  // Reduced motion: force visible immediately
+  if (REDUCED_MOTION) {
+    revealTargets.forEach(s => s.classList.add('is-visible'));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -60px 0px' });
+
+  revealTargets.forEach(s => observer.observe(s));
+
+  // Also animate version badge when hero copy is visible
+  const versionBadge = document.querySelector('.version-badge');
+  if (versionBadge && !versionBadge.classList.contains('is-visible')) {
+    // Version badge is in the hero — trigger it along with hero copy
+    const heroCopy = document.querySelector('.hero-copy');
+    if (heroCopy) {
+      const badgeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            versionBadge.classList.add('is-visible');
+            badgeObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      badgeObserver.observe(heroCopy);
+    }
   }
 }
 
@@ -505,6 +577,9 @@ export function initAnimations() {
 
   // Scroll-spy on nav links
   initScrollSpy();
+
+  // Section scroll reveal (below-fold sections)
+  initScrollReveal();
 
   // Back-to-top button
   initBackToTop();
