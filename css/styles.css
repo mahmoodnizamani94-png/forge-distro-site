@@ -1529,7 +1529,7 @@ body::before {
 
 .js-enabled .feature-card.is-visible {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: none;
 }
 
 .js-enabled .feature-card:nth-child(2).is-visible { transition-delay: 80ms; }
@@ -2440,7 +2440,7 @@ body::before {
 
 .js-enabled .hero-copy > .is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
   transition:
     opacity 500ms var(--ease-out-expo),
     transform 500ms var(--ease-out-expo);
@@ -2459,7 +2459,7 @@ body::before {
 
 .js-enabled .terminal-window.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
   transition:
     opacity 500ms var(--ease-out-expo),
     transform 500ms var(--ease-out-expo);
@@ -2474,7 +2474,7 @@ body::before {
 
 .js-enabled .section-reveal.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
   transition:
     opacity var(--duration-slow) var(--ease-out-expo),
     transform var(--duration-slow) var(--ease-out-expo);
@@ -2669,12 +2669,23 @@ body::before {
     grid-column: 1 / -1;
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: var(--space-6);
+    grid-template-rows: auto 1fr;
+    gap: 0 var(--space-6);
     align-items: start;
   }
 
   .features-grid .feature-card:first-child .feature-icon {
+    grid-row: 1 / -1;
     margin-bottom: 0;
+    padding-top: var(--space-1);
+  }
+
+  .features-grid .feature-card:first-child .feature-title {
+    margin-bottom: var(--space-2);
+  }
+
+  .features-grid .feature-card:first-child .feature-desc {
+    grid-column: 2;
   }
 
   .trust-grid {
