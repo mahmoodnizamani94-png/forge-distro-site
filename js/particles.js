@@ -1,7 +1,7 @@
 // ══════════════════════════════════════════════════════════════════════════════
 // FORGE DISTRO v2 — Particle Canvas Module
 // ═══════════════════════════════════════════════════════════════════════════════
-// 2D particle/star field with depth variation, copper tint, mouse repulsion,
+// 2D particle/star field with depth variation, achromatic Void-neutral tint,
 // pulsing particles, glow effects, and comprehensive pause/skip conditions.
 //
 // Skip conditions:
@@ -31,10 +31,10 @@ const FRONT_DEPTH_THRESHOLD  = 0.7;
 const FRAME_INTERVAL         = 1000 / 30; // ~33ms for 30fps
 const RESIZE_DEBOUNCE        = 200;
 
-// Copper tint — approximation of oklch(0.62 0.145 38) at varying alpha
-const COPPER_R = 160;
-const COPPER_G = 100;
-const COPPER_B = 48;
+// Void neutral tint — achromatic approximation of oklch(0.50 0.008 195)
+const NEUTRAL_R = 110;
+const NEUTRAL_G = 122;
+const NEUTRAL_B = 122;
 
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -334,9 +334,9 @@ class ParticleSystem {
       if (shouldGlow) {
         // Radial gradient glow
         const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 4);
-        gradient.addColorStop(0, `rgba(${COPPER_R}, ${COPPER_G}, ${COPPER_B}, ${alpha * 0.6})`);
-        gradient.addColorStop(0.5, `rgba(${COPPER_R}, ${COPPER_G}, ${COPPER_B}, ${alpha * 0.15})`);
-        gradient.addColorStop(1, `rgba(${COPPER_R}, ${COPPER_G}, ${COPPER_B}, 0)`);
+        gradient.addColorStop(0, `rgba(${NEUTRAL_R}, ${NEUTRAL_G}, ${NEUTRAL_B}, ${alpha * 0.6})`);
+        gradient.addColorStop(0.5, `rgba(${NEUTRAL_R}, ${NEUTRAL_G}, ${NEUTRAL_B}, ${alpha * 0.15})`);
+        gradient.addColorStop(1, `rgba(${NEUTRAL_R}, ${NEUTRAL_G}, ${NEUTRAL_B}, 0)`);
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size * 4, 0, Math.PI * 2);
@@ -347,7 +347,7 @@ class ParticleSystem {
       // Core particle
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${COPPER_R}, ${COPPER_G}, ${COPPER_B}, ${alpha})`;
+      ctx.fillStyle = `rgba(${NEUTRAL_R}, ${NEUTRAL_G}, ${NEUTRAL_B}, ${alpha})`;
       ctx.fill();
     }
   }

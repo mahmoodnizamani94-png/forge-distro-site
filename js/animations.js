@@ -489,9 +489,12 @@ function initPageEntry() {
     const versionBadge = document.querySelector('.version-badge');
     if (versionBadge) versionBadge.classList.add('is-visible');
 
-    // Force-show all reveal sections
+    // Force-show all reveal sections and stagger children
     const revealSections = document.querySelectorAll('.section-reveal');
-    revealSections.forEach(s => s.classList.add('is-visible'));
+    revealSections.forEach(s => {
+      s.classList.add('is-visible');
+      s.querySelectorAll('.stagger-child').forEach(c => c.classList.add('is-visible'));
+    });
   }
 }
 
@@ -503,11 +506,23 @@ function initPageEntry() {
 /**
  * Adds `.section-reveal` class to below-fold sections and reveals them
  * on scroll with IntersectionObserver. Hero and stats are excluded.
+ *
+ * Also tags children of known group containers with `.stagger-child`
+ * so CSS animates them individually with staggered delays.
  */
 function initScrollReveal() {
   const excludedSections = ['hero', 'stats'];
   const sections = document.querySelectorAll('section[id]');
   if (!sections.length) return;
+
+  // Selectors for containers whose direct children should stagger
+  const STAGGER_CONTAINERS = [
+    '.trust-grid',
+    '.gallery-grid',
+    '.requirements-list',
+    '.install-steps',
+    '.built-by-stack',
+  ];
 
   // Tag eligible sections with the CSS hook
   const revealTargets = [];
@@ -515,6 +530,18 @@ function initScrollReveal() {
     if (!excludedSections.includes(section.id)) {
       section.classList.add('section-reveal');
       revealTargets.push(section);
+
+      // Tag direct children of known group containers for stagger
+      STAGGER_CONTAINERS.forEach(sel => {
+        const container = section.querySelector(sel);
+        if (container) {
+          Array.from(container.children).forEach(child => {
+            // Skip decorative dividers (stat-divider, aria-hidden elements, etc.)
+            if (child.getAttribute('aria-hidden') === 'true') return;
+            child.classList.add('stagger-child');
+          });
+        }
+      });
     }
   });
 
@@ -522,7 +549,10 @@ function initScrollReveal() {
 
   // Reduced motion: force visible immediately
   if (REDUCED_MOTION) {
-    revealTargets.forEach(s => s.classList.add('is-visible'));
+    revealTargets.forEach(s => {
+      s.classList.add('is-visible');
+      s.querySelectorAll('.stagger-child').forEach(c => c.classList.add('is-visible'));
+    });
     return;
   }
 

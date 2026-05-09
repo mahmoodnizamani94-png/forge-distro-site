@@ -125,13 +125,22 @@ function bootstrap() {
 
   // ── Hero entry animation ────────────────────────────────────────────────
   // CSS has .js-enabled .hero-copy > * at opacity:0 and .terminal-window at opacity:0
-  // Adding .is-visible triggers the transition
+  // Adding .is-visible triggers the masked overflow reveal transition
   requestAnimationFrame(() => {
     const heroCopyChildren = document.querySelectorAll('.hero-copy > *');
     heroCopyChildren.forEach((el) => el.classList.add('is-visible'));
 
     const terminalWindow = document.querySelector('.terminal-window');
     if (terminalWindow) terminalWindow.classList.add('is-visible');
+
+    // Clean up will-change after hero sequence completes (~1200ms)
+    // to release GPU compositor layers
+    setTimeout(() => {
+      heroCopyChildren.forEach((el) => {
+        el.style.willChange = 'auto';
+      });
+      if (terminalWindow) terminalWindow.style.willChange = 'auto';
+    }, 1500);
   });
 
   console.log('[forge] All modules initialized');
