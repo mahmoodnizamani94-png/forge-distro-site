@@ -31,10 +31,10 @@ const FRONT_DEPTH_THRESHOLD  = 0.7;
 const FRAME_INTERVAL         = 1000 / 30; // ~33ms for 30fps
 const RESIZE_DEBOUNCE        = 200;
 
-// Void neutral tint — achromatic approximation of oklch(0.50 0.008 195)
-const NEUTRAL_R = 110;
+// Void v7 neutral tint — achromatic approximation of oklch(0.58 0.010 195)
+const NEUTRAL_R = 108;
 const NEUTRAL_G = 122;
-const NEUTRAL_B = 122;
+const NEUTRAL_B = 120;
 
 
 // ══════════════════════════════════════════════════════════════════════════════
