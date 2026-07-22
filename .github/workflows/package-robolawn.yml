@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - robolawn-v15-artifact
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
