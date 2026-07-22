@@ -1,0 +1,65 @@
+name: Package RoboLawn PHP Website
+
+on:
+  push:
+    branches:
+      - robolawn-v15-artifact
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out website
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Validate PHP files
+        shell: bash
+        run: |
+          set -euo pipefail
+          find . -maxdepth 1 -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Validate JavaScript
+        shell: bash
+        run: node --check assets/js/main.js
+
+      - name: Confirm shared includes and page extensions
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f header.php
+          test -f footer.php
+          pages=(index residential-properties community-associations commercial-properties landscape-companies dealers robotic-mowers services about contact become-a-dealer pro-tips videos faqs)
+          for page in "${pages[@]}"; do
+            file="$page.php"
+            test -f "$file"
+            grep -Fq "include 'header.php';" "$file"
+            grep -Fq "include 'footer.php';" "$file"
+          done
+          if find . -maxdepth 1 -name '*.html' | grep -q .; then
+            echo 'Unexpected HTML page found.' >&2
+            exit 1
+          fi
+
+      - name: Create website package
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p package/RoboLawn-PHP-Website-v15
+          cp -R ./*.php assets README.md package/RoboLawn-PHP-Website-v15/
+
+      - name: Upload ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RoboLawn-PHP-Mobile-Menu-Product-Catalog-v15
+          path: package/RoboLawn-PHP-Website-v15
+          if-no-files-found: error
+          retention-days: 30
